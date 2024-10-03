@@ -7,3 +7,7 @@ export const registerUser = async(userData:User)=>{
     console.log(server_url)
     return await axios.post(`${server_url}/register`, userData)
 }
+
+export const loginUser = async(email:string, password:string)=>{
+    return await axios.post(`${server_url}/login`, {email, password})
+}
