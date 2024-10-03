@@ -15,6 +15,7 @@ export const Login = () => {
       const response = await loginUser(email, password)
       console.log(response)
       if (response.status === 200) {
+        localStorage.setItem("token", response.data.data.token)
         navigate('/')
       } else {
         toast.error(response.data.message)
