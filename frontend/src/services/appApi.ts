@@ -11,3 +11,6 @@ export const registerUser = async(userData:User)=>{
 export const loginUser = async(email:string, password:string)=>{
     return await axios.post(`${server_url}/login`, {email, password})
 }
+export const createProject = async(name:string)=>{
+    return await axios.post(`${server_url}/project`, name)
+}
