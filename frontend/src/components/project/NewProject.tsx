@@ -6,13 +6,15 @@ import  { useProjectStore } from "../../zustand/ProjectStore"
 
 const NewProject = () => {
     const [projectName, setProjectName] = useState("")
-    const {setProjectModal} = useProjectStore()
+    const {setProjectModal, setIsAddProject} = useProjectStore()
     const handleNewProject=async (e:React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{
         e.preventDefault()
         if(!projectName.trim())return toast.error("please enter valid project name")
         try {
             const response = await createProject(projectName)
-            if(response.status==200)setProjectModal(false)
+            if(response.status==200){setProjectModal(false)
+                setIsAddProject(true)
+            }
         } catch (error) {
             console.log(error)
             toast.error("Something went wrong, Try again")

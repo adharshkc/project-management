@@ -3,7 +3,8 @@ const jwt = require("jsonwebtoken");
 const secret = process.env.JWT_SECRET;
 
 const verifyUser = function (req, res, next) {
-  const authorization = req.headers("Authorization");
+  console.log(req.headers.authorization)
+  const authorization = req.headers.authorization;
   if (!authorization) return res.status(401).json("Unauthorized");
   const bearer = authorization.split(" ");
   const token = bearer[1];
@@ -11,8 +12,8 @@ const verifyUser = function (req, res, next) {
     jwt.verify(token, secret, (err, payload) => {
       if (err) return res.status(401).json("Unauthorized");
       req.user = payload;
+      next();
     });
-    next();
   }
 };
 

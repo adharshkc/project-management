@@ -1,9 +1,41 @@
+import { useEffect, useState } from "react"
 import { useProjectStore } from "../../zustand/ProjectStore"
 import ProjectCard from "./ProjectCard"
+import { getProjects } from "../../services/appApi"
+import { Project as IProject } from "../../types/type"
+import { PuffLoader } from "react-spinners"
 
 
 const Project = () => {
-    const { setProjectModal } = useProjectStore()
+    const [projects, setProjects] = useState<IProject[]>([])
+    const [loading, setLoading] = useState<boolean>(false)
+
+    async function fetchProjects() {
+        setLoading(true)
+        try {
+            const response = await getProjects()
+            console.log(response)
+            setProjects(response.data.result)
+            setLoading(false)
+        } catch (error) {
+            setLoading(false)
+            console.log(error)
+        }
+    }
+    const { setProjectModal, isAddProject } = useProjectStore()
+    useEffect(()=>{
+        fetchProjects()
+    }, [isAddProject])
+    if(loading){
+        return(
+            <div className="min-h-screen bg-gray-900 p-8">
+                <div className="max-w-4xl mx-auto flex justify-center">
+
+                <PuffLoader color="rgba(223, 230, 230, 1)" />
+                </div>
+            </div>
+        )
+    }
     return (
         <div className="min-h-screen bg-gray-900 p-8">
             <div className="max-w-4xl mx-auto">
@@ -14,7 +46,12 @@ const Project = () => {
                         <span className="text-4xl">+</span>
                         <span className="ml-2 text-lg">Create project</span>
                     </div>
-                    <ProjectCard title="E commerce" />
+                    {projects.map((project)=>(
+                        
+                        <ProjectCard key={project?.id} project={project} />
+                       
+
+                    ))}
                 </div>
             </div>
         </div>
