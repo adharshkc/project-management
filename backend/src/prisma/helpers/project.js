@@ -21,6 +21,7 @@ async function findProject(userId) {
     console.log(userId);
     const projects = await prisma.project.findMany({
       where: { userId: userId },
+      include:{todos:true}
     });
 
     console.log(projects);
@@ -34,8 +35,9 @@ async function findProjectById(projectId) {
   try {
     const project = await prisma.project.findUnique({
       where: { id: projectId },
+      include:{todos:true}
     });
-
+    console.log(project)
     return project;
   } catch (error) {
     console.log(error);

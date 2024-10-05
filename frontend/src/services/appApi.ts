@@ -42,3 +42,12 @@ export const getSingleProject = async(projectId?:string)=>{
     });
   
 }
+
+export const createTodo = async(projectId?:string)=>{
+    const token = getToken()
+    return await axios.post(`${server_url}/project/${projectId}/todos`,{
+        headers:{
+            Authorization: `Bearer ${token}`,
+        }
+    })
+}

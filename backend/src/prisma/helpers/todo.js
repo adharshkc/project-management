@@ -1,4 +1,4 @@
-const {PrismaClient, PrismaClient} = require("@prisma/client")
+const {PrismaClient} = require("@prisma/client")
 const prisma = new PrismaClient()
 
 
@@ -12,8 +12,22 @@ async function addTodo(name, projectId) {
         })
         return newTodo
     } catch (error) {
-        
+        console.log(error)
+        throw new Error(error)
     }
 }
 
-module.exports ={addTodo}
+async function findTodos(projectId) {
+    try {
+        const todos = await prisma.todo.findMany({
+            where:{
+                projectId:projectId
+            }
+        })
+        return todos
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+module.exports ={addTodo, findTodos}

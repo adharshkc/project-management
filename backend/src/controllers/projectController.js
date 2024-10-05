@@ -17,6 +17,7 @@ const getProjects = async (req, res) => {
   console.log(userId)
   try {
     const result = await findProject(userId);
+    console.log(result)
      setTimeout(()=>res.status(200).json({ result, message: "success" }), 3000);
   } catch (error) {
     console.log(error)

@@ -15,7 +15,7 @@ datasource db {
 
 model User {
   id       Int       @id @default(autoincrement())
-  email    String    @unique 
+  email    String    @unique
   name     String
   password String
   projects Project[]
@@ -26,14 +26,16 @@ model Project {
   name   String
   user   User   @relation(fields: [userId], references: [id])
   userId Int
-  todos Todo[]
+  todos  Todo[]
 }
 
 model Todo {
-  id Int @id @default(autoincrement())
-  name String
+  id          Int      @id @default(autoincrement())
+  name        String
   description String?
-  status String @default("todo")
-  project Project @relation(fields: [projectId], references: [id])
-  projectId Int 
+  status      String   @default("todo")
+  project     Project  @relation(fields: [projectId], references: [id])
+  projectId   Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

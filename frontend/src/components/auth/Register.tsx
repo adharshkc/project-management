@@ -3,6 +3,7 @@ import { registerUser } from "../../services/appApi"
 import { Link, useNavigate } from "react-router-dom"
 import toast, { Toaster } from "react-hot-toast"
 import validator from "validator";
+import useAuthStore from "../../zustand/AuthStore";
 
 
 const Register = () => {
@@ -10,6 +11,7 @@ const Register = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const navigate = useNavigate()
+    const { setIsAuthenticated } = useAuthStore()
     const handleSubmit = async (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
         e.preventDefault()
         if (!name.trim() || name.length <= 2) return toast.error("Please enter a valid name.")
@@ -25,6 +27,7 @@ const Register = () => {
         const response = await registerUser(user)
         console.log(response)
         if (response.status == 200) {
+            setIsAuthenticated(true)
             return navigate('/')
         }
     }

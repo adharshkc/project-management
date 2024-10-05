@@ -4,22 +4,25 @@ import ProjectCard from "./ProjectCard"
 import { getProjects } from "../../services/appApi"
 import { Project as IProject } from "../../types/type"
 import { PuffLoader } from "react-spinners"
-
+import useAuthStore from "../../zustand/AuthStore"
 
 const Project = () => {
     const [projects, setProjects] = useState<IProject[]>([])
     const [loading, setLoading] = useState<boolean>(false)
-
+    const {setIsAuthenticated} = useAuthStore()
     async function fetchProjects() {
         setLoading(true)
         try {
             const response = await getProjects()
-            console.log(response)
             setProjects(response.data.result)
             setLoading(false)
-        } catch (error) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error:any) {
             setLoading(false)
-            console.log(error)
+            console.log(error.response.data)
+            if(error.response.status==401&&error.response.data=="Unauthorized"){
+                setIsAuthenticated(false)
+            }
         }
     }
     const { setProjectModal, isAddProject } = useProjectStore()
@@ -46,7 +49,7 @@ const Project = () => {
                         <span className="text-4xl">+</span>
                         <span className="ml-2 text-lg">Create project</span>
                     </div>
-                    {projects.map((project)=>(
+                    {projects?.map((project)=>(
                         
                         <ProjectCard key={project?.id} project={project} />
                        
