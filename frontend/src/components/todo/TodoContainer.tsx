@@ -1,31 +1,48 @@
-import { useSortable } from "@dnd-kit/sortable"
+
+import RoundCheck from "../../assets/icons/RoundCheck";
 import TrashIcon from "../../assets/icons/TrashIcon"
 import { Todo } from "../../types/type";
+import { useProjectStore } from "../../zustand/ProjectStore";
 
-const TodoContainer = ({ todo }: { todo: Todo }) => {
-    const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
-        id: todo.id,
-        data: {
-            type: "Todo",
-            todo
-        }
-    })
-    const styles = {
-        transform: CSS?.Transform?.toString(transform),
-        transition: transition || undefined,
-        // opacity: isDragging ? 0.5 : 1,
-    };
+const TodoContainer = ({ todo, completeTodo, todoId, completed }: { todo: Todo, completeTodo: (id: number) => void, todoId: (id: number) => void, completed: boolean }) => {
+    const { setDeleteModal } = useProjectStore()
+    const handleCompleteTodo = () => {
+        completeTodo(todo.id)
+    }
+
+
+    const handleDelete = () => {
+        todoId(todo.id)
+        setDeleteModal(true)
+    }
     return (
-        <div ref={setNodeRef}
-            style={styles}
-            {...attributes}
-            {...listeners}
+        <div
             className="p-2 my-2 flex justify-between bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-            <h1>todo 1</h1>
-            <div className="cursor-pointer">
+           {!completed?
+            <h1>{todo.name}</h1>:
+            <h1><del>
+                {todo.name}
+                </del>
+                </h1>
+           }
+                {!completed?
+            <div className="flex">
+                <div className="cursor-pointer mt-0.5 mx-2 w-6" onClick={handleCompleteTodo}>
+                    <RoundCheck />
+                </div>
+                <div className="cursor-pointer" onClick={handleDelete}>
 
-                <TrashIcon />
+                    <TrashIcon />
             </div>
+                </div>
+                 :
+                 <div className="cursor-pointer" onClick={handleDelete}>
+
+                     <TrashIcon />
+                </div>
+                }
+
+
         </div>
     )
 }

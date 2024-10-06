@@ -1,4 +1,4 @@
-const { addTodo, findTodos } = require("../prisma/helpers/todo")
+const { addTodo, findTodos, todoDelete, todoComplete } = require("../prisma/helpers/todo")
 
 
 
@@ -26,4 +26,32 @@ const getTodos = async(req, res)=>{
     }
 }
 
-module.exports = {createTodo, getTodos}
+const deleteTodo = async(req, res)=>{
+    const todoId = req.params.todoId
+    try {
+        const result = await todoDelete(parseInt(todoId))
+        console.log(result)
+        return res.status(200).json({result, message:"success"})
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ error });
+    }
+}
+
+const completeTodo = async (req, res)=>{
+    const todoId = req.body.todoId
+    console.log(todoId)
+    try {
+        const result = await todoComplete(parseInt(todoId))
+        console.log(result)
+        return res.status(200).json({result, message:"success"})
+    
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ error });
+    }
+    
+}
+
+module.exports = {createTodo, getTodos, deleteTodo, completeTodo}

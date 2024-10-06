@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../../services/appApi";
@@ -8,7 +8,13 @@ export const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState("")
   const navigate = useNavigate()
-  const {setIsAuthenticated} = useAuthStore()
+  const {setIsAuthenticated, isAuthenticated} = useAuthStore()
+  useEffect(()=>{
+    if(isAuthenticated){
+      navigate("/")
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
   const handleLogin = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault()
     if (!email.trim()) return toast.error("Please enter a valid email.")

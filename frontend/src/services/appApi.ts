@@ -43,9 +43,27 @@ export const getSingleProject = async(projectId?:string)=>{
   
 }
 
-export const createTodo = async(projectId?:string)=>{
+export const createTodo = async(name:string, projectId?:string)=>{
     const token = getToken()
-    return await axios.post(`${server_url}/project/${projectId}/todos`,{
+    return await axios.post(`${server_url}/project/${projectId}/todos`,{name},{
+        headers:{
+            Authorization: `Bearer ${token}`,
+        }
+    })
+}
+
+export const completeTodo =async(todoId:number, projectId?:string)=>{
+    const token = getToken()
+    console.log(todoId)
+    return await axios.patch(`${server_url}/project/${projectId}/todos/complete`,{todoId},{
+        headers:{
+            Authorization: `Bearer ${token}`,
+        }
+    })
+}
+export const deleteTodo =async(todoId?:number, projectId?:string)=>{
+    const token = getToken()
+    return await axios.delete(`${server_url}/project/${projectId}/todos/${todoId}`,{
         headers:{
             Authorization: `Bearer ${token}`,
         }

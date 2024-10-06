@@ -1,8 +1,18 @@
 
+import { useNavigate } from "react-router-dom"
 import logo from "../../assets/company-logo-transparent-png-19.png"
+import useAuthStore from "../../zustand/AuthStore"
 
 
 const Navbar = () => {
+  const {setIsAuthenticated} = useAuthStore()
+  const navigate = useNavigate()
+  const handleLogout = ()=>{
+    localStorage.removeItem("token")
+    setIsAuthenticated(false)
+    navigate("/login")
+  }
+
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-800" >
     <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4">
@@ -12,7 +22,7 @@ const Navbar = () => {
         </div>
         
         <div className="flex items-center space-x-6 rtl:space-x-reverse">
-            <a href="#" className="text-sm  text-blue-600 dark:text-blue-500 hover:underline">Login</a>
+            <h1 onClick={handleLogout} className="text-sm  text-blue-600 dark:text-blue-500 cursor-pointer hover:underline">Logout</h1>
         </div>
     </div>
 </nav>

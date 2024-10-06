@@ -1,4 +1,4 @@
-import { MouseEvent, useState } from "react"
+import { MouseEvent, useEffect, useState } from "react"
 import { registerUser } from "../../services/appApi"
 import { Link, useNavigate } from "react-router-dom"
 import toast, { Toaster } from "react-hot-toast"
@@ -11,7 +11,13 @@ const Register = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const navigate = useNavigate()
-    const { setIsAuthenticated } = useAuthStore()
+    const { setIsAuthenticated, isAuthenticated } = useAuthStore()
+    useEffect(()=>{
+        if(isAuthenticated){
+          navigate("/")
+        }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      },[])
     const handleSubmit = async (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
         e.preventDefault()
         if (!name.trim() || name.length <= 2) return toast.error("Please enter a valid name.")
@@ -31,8 +37,6 @@ const Register = () => {
             return navigate('/')
         }
     }
-
-
     return (
         <>
             <Toaster

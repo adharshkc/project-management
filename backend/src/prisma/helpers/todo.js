@@ -30,4 +30,32 @@ async function findTodos(projectId) {
     }
 }
 
-module.exports ={addTodo, findTodos}
+async function todoDelete(todoId){
+    try {
+        const todo = await prisma.todo.delete({
+            where:{id:todoId}
+        })
+        return todo
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+async function todoComplete(todoId){
+    try {
+        const todo = await prisma.todo.update({
+            where:{id:todoId},
+            data:{
+                status:'completed'
+            }
+        })
+        console.log(todo)
+        return todo
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
+
+module.exports ={addTodo, findTodos, todoDelete, todoComplete}

@@ -1,33 +1,17 @@
-import { useState } from "react"
-import toast, { Toaster } from "react-hot-toast"
-import { createProject } from "../../services/appApi"
-import { useProjectStore } from "../../zustand/ProjectStore"
-import useAuthStore from "../../zustand/AuthStore"
+import { useState } from 'react'
+import { Toaster } from 'react-hot-toast'
+import { Project } from '../../types/type'
 
-
-const NewProject = () => {
-    const [projectName, setProjectName] = useState("")
-    const { setProjectModal, setIsAddProject } = useProjectStore()
-    const { setIsAuthenticated } = useAuthStore()
-    const handleNewProject = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        e.preventDefault()
-        if (!projectName.trim()) return toast.error("please enter valid project name")
+const ProjectDetail = ({ project, ProjectDetailModal }: { project: Project, ProjectDetailModal: (bool: boolean) => void }) => {
+    const [projectName, setProjectName] = useState(project.name)
+    const handleEditModal = async()=>{
         try {
-            const response = await createProject(projectName)
-            if (response.status == 200) {
-                setProjectModal(false)
-                setIsAddProject(true)
-            }
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } catch (error: any) {
-            console.log(error)
-
-            toast.error("Something went wrong, Try again")
-            if (error.response.status == 401 && error.response.data == "Unauthorized") {
-                setIsAuthenticated(false)
-            }
+            const response = await 
+        } catch (error) {
+            
         }
     }
+
     return (
         <>
             <Toaster
@@ -72,14 +56,14 @@ const NewProject = () => {
                                 <button
                                     type="button"
                                     className=" text-white  mx-3 hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-                                    onClick={() => setProjectModal(false)}
+                                    onClick={() => ProjectDetailModal(false)}
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="button"
                                     className=" text-white hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                                    onClick={(e) => handleNewProject(e)}
+                                // onClick={(e) => handleNewProject(e)}
                                 >
                                     Add Project
                                 </button>
@@ -88,10 +72,8 @@ const NewProject = () => {
                     </div>
                 </div>
             </div>
-            
         </>
-
     )
 }
 
-export default NewProject
+export default ProjectDetail
