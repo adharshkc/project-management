@@ -43,5 +43,21 @@ async function findProjectById(projectId) {
     console.log(error);
   }
 }
+async function updateName(name,projectId) {
+  try {
+    const project = await prisma.project.update({
+      where: { id: projectId },
+      data:{
+        name:name
+      }
+    });
+    console.log(project)
+    return project;
+  } catch (error) {
+    console.log(error);
+  }
+}
 
-module.exports = { addProject, findProject, findProjectById };
+
+
+module.exports = { addProject, findProject, findProjectById ,updateName};

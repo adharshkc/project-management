@@ -14,11 +14,13 @@ export type Project = {
 };
 
 export type Todo = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  updatedAt: any;
   name: string;
   projectId: number;
   id: number;
   status: string;
   description: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  createdDate: any
+  createdAt: any
 };

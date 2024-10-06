@@ -1,4 +1,4 @@
-const { addProject, findProject , findProjectById} = require("../prisma/helpers/project");
+const { addProject, findProject , findProjectById, updateName} = require("../prisma/helpers/project");
 
 const createProject = async (req, res) => {
   const { projectName } = req.body;
@@ -18,7 +18,7 @@ const getProjects = async (req, res) => {
   try {
     const result = await findProject(userId);
     console.log(result)
-     setTimeout(()=>res.status(200).json({ result, message: "success" }), 3000);
+     setTimeout(()=>res.status(200).json({ result, message: "success" }), 1000);
   } catch (error) {
     console.log(error)
     return res.status(500).json({ error });
@@ -36,4 +36,16 @@ const getSingleProject = async (req, res)=>{
   }
 }
 
-module.exports = { createProject, getProjects , getSingleProject};
+const updateProjectName = async(req, res)=>{
+  const projectId = req.params.projectId;
+  const projectName = req.body.name;
+  try {
+    const result = await updateName(projectName,parseInt(projectId))
+    return res.status(200).json({result})
+  } catch (error) {
+    return res.status(500).json({error})
+    
+  }
+}
+
+module.exports = { createProject, getProjects , getSingleProject , updateProjectName};

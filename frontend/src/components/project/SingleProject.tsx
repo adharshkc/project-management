@@ -11,6 +11,9 @@ import { useProjectStore } from "../../zustand/ProjectStore"
 import DeleteModal from "./DeleteModal"
 import { PuffLoader } from "react-spinners"
 import ProjectDetail from "./ProjectDetail"
+import createGist from "../../utils/createGist"
+import toast, { Toaster } from "react-hot-toast"
+import GistModal from "./GistModal"
 
 const SingleProject = () => {
     const [project, setProject] = useState<IProject | null>(null)
@@ -19,8 +22,9 @@ const SingleProject = () => {
     const [newTodo, setNewTodo] = useState<boolean>(false)
     const [deleteTodoId, setDeleteTodoId] = useState<number>()
     const [todoInput, setTodoInput] = useState("")
-    const [projectName, setProjectName] = useState("")
     const [editProjectName, seteditProjectName] = useState<boolean>(false)
+    const [openGist, setOpenGist] = useState<boolean>(false)
+    const [gistUrl, setGistUrl]= useState<string>("")
     const { projectId } = useParams()
     const { setIsAuthenticated } = useAuthStore()
     const { deleteModal, setDeleteModal } = useProjectStore()
@@ -91,12 +95,23 @@ const SingleProject = () => {
     }
     const handleEditProject = async(bool:boolean)=>{
         seteditProjectName(bool)
+        fetchProject()
     }
     useEffect(() => {
         fetchProject()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [projectId])
 
+    const handleCreateGist = async()=>{
+       // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       const response:any = await createGist(project)
+       if(response.status==201){
+        setGistUrl(response.data.html_url)
+        setOpenGist(true)
+       }else{
+        toast.error("Error exporting gist")
+       }
+    }
     if (project == null) {
         return (
             <div className="flex justify-center align-middle">
@@ -105,10 +120,16 @@ const SingleProject = () => {
         )
 
     }
+
     return (
         <div >
+            <Toaster
+                position="top-right"
+                reverseOrder={false}
+            />
+           
             {deleteModal && <DeleteModal deleteTodo={handleDeleteTodo} />}
-            <div>
+            <div className="flex justify-between  ">
                 <h1 className="mx-28 my-4 text-3xl flex items-center">
                     <Link to={"/"}>
                         <div className="w-6 mx-5 cursor-pointer">
@@ -121,6 +142,7 @@ const SingleProject = () => {
                     </span>
                    
                 </h1>
+                <button className="mr-10 hover:bg-gray-800 p-1 h-8 mt-5" onClick={handleCreateGist}>Export as gist</button>
             </div>
             <div className="flex justify-center">
                 <div className="w-80 mx-16 p-3 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
@@ -154,6 +176,7 @@ const SingleProject = () => {
                 </div>
             </div>
             {editProjectName&&<ProjectDetail project={project} ProjectDetailModal={handleEditProject} />}
+            {openGist&&<GistModal openGist={setOpenGist} url={gistUrl}/>}
         </div>
     )
 }

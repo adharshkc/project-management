@@ -13,7 +13,7 @@ const Dashboard = () => {
             <Navbar />
             <div>
 
-                <h1 className="text-3xl text-whte text-center mt-4">Good {timeOfDay}, Adharsh !</h1>
+                <h1 className="text-3xl text-whte text-center mt-4">Good {timeOfDay} !</h1>
             </div>
             <Project />
             {projectModal && <NewProject />}

@@ -69,3 +69,13 @@ export const deleteTodo =async(todoId?:number, projectId?:string)=>{
         }
     })
 }
+
+export const editProjectName = async (name:string, projectId?:string)=>{
+  const token = getToken()
+  return await axios.patch(`${server_url}/project/${projectId}/name`,{name},{
+    headers:{
+        Authorization: `Bearer ${token}`,
+    }
+})
+
+}

@@ -1,14 +1,29 @@
 import { useState } from 'react'
-import { Toaster } from 'react-hot-toast'
+import toast, { Toaster } from 'react-hot-toast'
 import { Project } from '../../types/type'
+import { editProjectName } from '../../services/appApi'
+import { useParams } from 'react-router-dom'
+import useAuthStore from '../../zustand/AuthStore'
 
 const ProjectDetail = ({ project, ProjectDetailModal }: { project: Project, ProjectDetailModal: (bool: boolean) => void }) => {
     const [projectName, setProjectName] = useState(project.name)
+    const {setIsAuthenticated} = useAuthStore()
+    const {projectId} = useParams()
     const handleEditModal = async()=>{
         try {
-            const response = await 
-        } catch (error) {
-            
+            console.log(projectName)
+            if(!projectName.trim())return toast.error("Please enter valid name")
+            const response = await editProjectName(projectName, projectId)
+            if(response.status==200){
+                ProjectDetailModal(false)
+            }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error:any) {
+          console.log(error) 
+          if (error.response.status == 401 && error.response.data == "Unauthorized") {
+            console.log(error.response.data)
+            setIsAuthenticated(false)
+        } 
         }
     }
 
@@ -63,7 +78,7 @@ const ProjectDetail = ({ project, ProjectDetailModal }: { project: Project, Proj
                                 <button
                                     type="button"
                                     className=" text-white hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                                // onClick={(e) => handleNewProject(e)}
+                                onClick={handleEditModal}
                                 >
                                     Add Project
                                 </button>

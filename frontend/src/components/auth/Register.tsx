@@ -33,6 +33,7 @@ const Register = () => {
         const response = await registerUser(user)
         console.log(response)
         if (response.status == 200) {
+            localStorage.setItem("token", response.data.data.token)
             setIsAuthenticated(true)
             return navigate('/')
         }
