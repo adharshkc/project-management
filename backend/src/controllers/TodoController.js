@@ -1,6 +1,5 @@
 const { addTodo, findTodos, todoDelete, todoComplete } = require("../prisma/helpers/todo")
-
-
+   
 
 const createTodo = async (req, res)=> {
     const projectId = req.params.projectId
@@ -24,8 +23,8 @@ const getTodos = async(req, res)=>{
     } catch (error) {
         return res.status(500).json({ error });
     }
-}
 
+}
 const deleteTodo = async(req, res)=>{
     const todoId = req.params.todoId
     try {
